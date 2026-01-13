@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Айдай: Приключение в Древней Греции</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    text-align: center;
+    color: #fff;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #1a237e 0%, #4a148c 100%);
+    min-height: 100vh;
+}
+#game {
+    background: rgba(26, 35, 126, 0.85);
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    position: relative;
+}
+h1 {
+    color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    margin-bottom: 10px;
+    font-size: 2.5em;
+    padding: 10px;
+}
+h2 {
+    color: #87CEEB;
+    margin: 20px 0;
+    font-size: 1.8em;
+}
+p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+img {
+    width: 100%;
+    max-width: 550px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin: 20px auto;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+}
+button {
+    padding: 15px;
+    font-size: 17px;
+    margin: 12px auto;
+    width: 95%;
+    max-width: 450px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #ff6b6b, #ffa726);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: block;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(255, 167, 38, 0.7);
+}
+button:active {
+    transform: scale(0.98);
+}
+.ending-screen {
+    padding: 20px;
+    animation: fadeIn 1s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; } 
+    to { opacity: 1; }
+}
+.step-counter {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: rgba(255, 215, 0, 0.25);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border: 1px solid rgba(255, 215, 0, 0.4);
+}
+.sisters-note {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px auto;
+    max-width: 500px;
+    border-left: 4px solid #ff6b6b;
+}
+.history-btn {
+    background: linear-gradient(45deg, #5c6bc0, #7986cb);
+}
+.restart-btn {
+    background: linear-gradient(45deg, #66bb6a, #43a047);
+}
+</style>
+</head>
+<body>
+
+<h1>🏛️ Айдай: Приключение в Древней Греции 🏛️</h1>
+<div id="game"></div>
+
+<script>
+const player = "Айдай";
+const sisters = ["Алина", "Элина"];
+
+const storySteps = [
+    {
+        id: 0,
+        title: "🌅 Начало приключения",
+        text: `${player}, ты и твои сёстры ${sisters[0]} и ${sisters[1]} отдыхаете на берегу моря недалеко от Афин. Внезапно вы замечаете древний свиток, выброшенный волной. Что сделаешь?`,
+        img: "https://images.mein-mmo.de/magazin/medien/2017/07/WoW-Alleria-Korhiper-Head.jpg",
+        choices: [
+            {
+                text: "Открыть свиток и прочитать",
+                ending: {
+                    title: "📜 Карта к тайне",
+                    text: `Свиток оказывается картой с указанием пути к тайному саду Гесперид. ${sisters[0]} восклицает: "Это же шанс на настоящие приключения!"`,
+                    img: "https://images.unsplash.com/photo-1728245029346-11542431e45f?q=80&w=1308&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                }
+            },
+            {
+                text: "Показать свиток сёстрам",
+                ending: {
+                    title: "👭 Сестринское решение",
+                    text: `${sisters[1]} узнаёт древние символы: "Это письмена времён Троянской войны!". Вы решаете вместе разгадать тайну.`,
+                    img: "https://www.gamersglobal.de/sites/gamersglobal.de/files/news/teaser/26641/TotalWarSaga_Troy_02.jpg"
+                }
+            },
+            {
+                text: "Спрятать свиток и вернуться домой",
+                ending: {
+                    title: "🏠 Осторожность",
+                    text: "Ты решаешь, что древние артефакты несут опасность. Но той ночью тебе снится, как золотые яблоки зовут тебя по имени...",
+                    img: "https://paleothea.com/wp-content/uploads/images/hesperides-garden-sunset.jpeg"
+                }
+            }
+        ]
+    },
+    {
+        id: 1,
+        title: "🏺 Встреча с Кассандрой",
+        text: "Следуя по карте, вы попадаете в древний храм, где встречаете Кассандру — пророчицу, чьим предсказаниям никто не верит. Она смотрит на тебя и говорит: 'Твой путь пересечётся с тем, кто летает слишком близко к солнцу'. Что ответишь?",
+        img: "https://i.ytimg.com/vi/ptgY3WVvT5U/hqdefault.jpg",
+        choices: [
+            {
+                text: "Попросить объяснить пророчество",
+                ending: {
+                    title: "🔮 Знание наперёд",
+                    text: "Кассандра рассказывает об Икаре и даёт амулет защиты от 'опаляющей гордыни'. Ты благодаришь её, но видишь печаль в её глазах.",
+                    img: "https://i.pinimg.com/736x/a8/6d/ec/a86dec80668de9653f888e6a08672f74.jpg"
+                }
+            },
+            {
+                text: "Предложить помощь в храме",
+                ending: {
+                    title: "🤝 Доверие пророчицы",
+                    text: "Ты помогаешь Кассандре навести порядок в храме. В благодарность она шепчет: 'Избегай лабиринтов собственных сомнений'.",
+                    img: "https://i.ytimg.com/vi/GvzU7tgwqZQ/maxresdefault.jpg"
+                }
+            },
+            {
+                text: "Уйти, не веря предсказаниям",
+                ending: {
+                    title: "🚶‍♀️ Скептицизм",
+                    text: "Ты решаешь, что пророчества — просто сказки. Но позже вспомнишь слова Кассандры, когда окажешься в сложной ситуации.",
+                    img: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC4FPgKhyphenhyphenZxF76qBYMomWJzqdRS_ihPuKD5shyEyd370y2yc9wsiYBXwjGxCS5wCMqslXAeq94yZgfMXC1fCevqofsrFpjp4YOEKBoEb0lPOzF6av8ut045De-8HfX3QjaGdDte3eogAI/s640/Icarus%2526Cassandra.jpg"
+                }
+            }
+        ]
+    },
+    {
+        id: 2,
+        title: "🦅 Встреча с Икаром",
+        text: "На краю высокого утёса ты встречаешь юношу с восковыми крыльями. Это Икар! Он говорит: 'Хочешь увидеть мир с высоты богов?' Твои сёстры колеблются. Что выберешь?",
+        img: "https://i.pinimg.com/474x/d7/c3/3b/d7c33b4df2b60ec60614d87b131a3e8e.jpg",
+        choices: [
+            {
+                text: "Принять предложение Икара",
+                ending: {
+                    title: "🌤️ Полёт к облакам",
+                    text: "Икар учит тебя летать на маленьких крыльях. Вы парите над морем, и ты чувствуешь невероятную свободу. 'Не слишком высоко!' — предупреждает он.",
+                    img: "https://i.ytimg.com/vi/GvzU7tgwqZQ/maxresdefault.jpg"
+                }
+            },
+            {
+                text: "Отказаться, помня предупреждение Кассандры",
+                ending: {
+                    title: "⚠️ Мудрая осторожность",
+                    text: "Ты отказываешься, вспомнив слова пророчицы. Икар взлетает один. ${sisters[0]} говорит: 'Ты поступила правильно'.",
+                    img: "https://i.ytimg.com/vi/QguzoQDz6c4/maxresdefault.jpg"
+                }
+            },
+            {
+                text: "Предложить сначала отдохнуть и поесть",
+                ending: {
+                    title: "🍇 Забота о путнике",
+                    text: "Ты предлагаешь Икару отдохнуть. За трапезой он рассказывает о своём отце Дедале и сложностях их побега с Крита.",
+                    img: "https://i.quotev.com/k4currixaaaa.jpg"
+                }
+            }
+        ]
+    },
+    {
+        id: 3,
+        title: "🌿 Сад Гесперид",
+        text: "Наконец вы находите тайный сад с золотыми яблоками бессмертия. Но сад охраняет дракон Ладон. Твои сёстры предлагают разные планы. Чей послушаешь?",
+        img: "https://wow.zamimg.com/uploads/blog/images/13893-new-comic-reveal-windrunner-three-sisters.png",
+        choices: [
+            {
+                text: "План Алины: отвлечь дракона",
+                ending: {
+                    title: "🎶 Хитрость и смелость",
+                    text: `${sisters[0]} начинает петь, отвлекая дракона. Ты пробираешься к яблоням и срываешь одно яблоко. Дракон даже не замечает!`,
+                    img: "https://sun9-39.userapi.com/impf/q8kM9afqp8cZ19gWilT7LqqPQGPmcemtdsSmgA/i42YVgsD0lQ.jpg?size=807x454&quality=96&sign=936cbc99843c99728794412fde3f6cbf&type=album"
+                }
+            },
+            {
+                text: "План Элины: договориться с драконом",
+                ending: {
+                    title: "🗣️ Дипломатический подход",
+                    text: `${sisters[1]} использует знание древнего языка. Дракон, оказывается, просто одинок! Он даёт вам яблоко в обмен на обещание навещать его.`,
+                    img: "https://images.mein-mmo.de/medien/2022/04/WoW-Dragonflight-Alexstrasza-mirrored-titel-title-1280x720-1.jpg"
+                }
+            },
+            {
+                text: "Свой план: подождать ночи",
+                ending: {
+                    title: "🌙 Терпение и расчёт",
+                    text: "Ты решаешь подождать до ночи, когда дракон заснёт. План срабатывает! Вы тихо собираете несколько яблок и уходите незамеченными.",
+                    img: "https://wow.zamimg.com/uploads/blog/images/13900-new-comic-on-the-windrunners-three-sisters-world-of-warcraft-battle-for-azeroth.png"
+                }
+            }
+        ]
+    },
+    {
+        id: 4,
+        title: "⚡ Гнев богов",
+        text: "Как только вы взяли золотые яблоки, небо потемнело. Раздался голос: 'Смертные, вы взяли то, что принадлежит богам!'. Это Афина и Аполлон. Что сделаешь?",
+        img: "https://c4.wallpaperflare.com/wallpaper/63/378/382/women-cosplay-world-of-warcraft-windrunner-sisters-hd-wallpaper-preview.jpg",
+        choices: [
+            {
+                text: "Вернуть яблоки и извиниться",
+                ending: {
+                    title: "🙏 Смирение",
+                    text: "Афина смягчается: 'Мудрость в том, чтобы знать свои границы'. В награду за честность она даёт вам серебряные зеркала, показывающие правду.",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmUAj69YYn1uzRh6O0GXZMk82IjTAQ8Em9-w&s"
+                }
+            },
+            {
+                text: "Объяснить, что яблоки для доброго дела",
+                ending: {
+                    title: "💬 Красноречие",
+                    text: "Ты рассказываешь, что хочешь исцелить больных в своей деревне. Аполлон впечатлён: 'Сострадание редко встречается у смертных'. Он разрешает оставить одно яблоко.",
+                    img: "https://i.pinimg.com/736x/eb/76/15/eb761597115a9588f1341906c080617e.jpg"
+                }
+            },
+            {
+                text: "Предложить испытание взамен",
+                ending: {
+                    title: "⚖️ Справедливость",
+                    text: "Ты предлагаешь пройти испытание, чтобы заслужить яблоки. Афина назначает задачу: решить загадку сфинкса. Ты справляешься!",
+                    img: "https://64.media.tumblr.com/268ef924ea31f6eb9c3181f470be5fec/tumblr_inline_p7v53bkWlp1t5dls3_500.gifv"
+                }
+            }
+        ]
+    },
+    {
+        id: 5,
+        title: "🏡 Возвращение домой",
+        text: "С приключениями позади, вы возвращаетесь в свою деревню. Теперь у вас есть золотое яблоко (или дар богов). Как распорядишься им?",
+        img: "https://i.ytimg.com/vi/p7ty0tE6ypg/maxresdefault.jpg",
+        choices: [
+            {
+                text: "Использовать для исцеления больных",
+                ending: {
+                    title: "❤️ Целительница",
+                    text: "Ты исцеляешь всех больных в деревне. Слава о твоей доброте разносится по всей Греции. Тебя начинают называть 'милосердной Айдай'.",
+                    img: "https://s1.dmcdn.net/v/DfRHi1enTssA2-K3H/x720"
+                }
+            },
+            {
+                text: "Разделить между сёстрами",
+                ending: {
+                    title: "👭 Сестринская связь",
+                    text: "Вы делите яблоко на три части. Каждая чувствует прилив сил и мудрости. Теперь вы не просто сёстры — вы вечно связанные души.",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ13utHkyLxG8VjHQ3ob_i5d8Hjv8qMjwouhQ&s"
+                }
+            },
+            {
+                text: "Спрятать как семейную реликвию",
+                ending: {
+                    title: "💎 Наследие",
+                    text: "Ты создаёшь тайник для яблока. Оно становится семейной реликвией, которая передаётся из поколения в поколение вместе с историей вашего приключения.",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzqZeTDAzL901187kQqY_XmW-NMg8s9pYafw&s"
+                }
+            }
+        ]
+    },
+    {
+        id: 6,
+        title: "🌟 Будущее Айдай",
+        text: "Прошли годы. Твоё приключение стало легендой. Как сложилась твоя дальнейшая жизнь?",
+        img: "https://www.animationmagazine.net/wordpress/wp-content/uploads/hercules.jpg",
+        choices: [
+            {
+                text: "Стать советницей в Афинах",
+                ending: {
+                    title: "🏛️ Мудрая советница",
+                    text: "Твоя мудрость, полученная в путешествиях, делает тебя уважаемой советницей. Ты помогаешь правителям принимать справедливые решения.",
+                    img: "https://i.redd.it/i-recreate-the-scene-where-athena-finds-poseidon-doing-s3x-v0-fb0xd8wzteaf1.jpg?width=1307&format=pjpg&auto=webp&s=5fb3445cc2e218b0460ddf7b8ae809990e95e706"
+                }
+            },
+            {
+                text: "Основать школу для девочек",
+                ending: {
+                    title: "📚 Учительница",
+                    text: "Ты открываешь первую школу, где девочки учатся не только домашним делам, но и философии, медицине и истории. Твои ученицы меняют мир.",
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5oxL980ytnVRAU9IaNwkqKYUjpGoQ_iCDpA&s"
+                }
+            },
+            {
+                text: "Продолжить путешествия с сёстрами",
+                ending: {
+                    title: "🌍 Вечные странницы",
+                    text: "Вы с сёстрами продолжаете исследовать мир. Легенды о трёх сёстрах-путешественницах появляются в разных культурах под разными именами.",
+                    img: "https://static.wixstatic.com/media/fd79ea_0bf137d1ed7b4735a8c33fc2009816ee.jpg/v1/fill/w_1000,h_560,al_c,q_85,usm_0.66_1.00_0.01/fd79ea_0bf137d1ed7b4735a8c33fc2009816ee.jpg"
+                }
+            }
+        ]
+    }
+];
+
+let currentStep = 0;
+let storyHistory = [];
+
+function renderStep() {
+    const gameDiv = document.getElementById("game");
+    const step = storySteps[currentStep];
+    
+    let html = `<div class="step-counter">Приключение ${currentStep + 1}/7</div>`;
+    html += `<h2>${step.title}</h2>`;
+    html += `<p>${step.text}</p>`;
+    
+    if (currentStep === 0 || currentStep === 3 || currentStep === 5) {
+        html += `<div class="sisters-note">С тобой твои сёстры: <strong>${sisters[0]}</strong> и <strong>${sisters[1]}</strong></div>`;
+    }
+    
+    html += `<img src="${step.img}" alt="Иллюстрация шага ${currentStep + 1}">`;
+    html += `<div style="margin-top:20px;">`;
+    
+    step.choices.forEach((choice, index) => {
+        html += `<button onclick="makeChoice(${index})">${choice.text}</button>`;
+    });
+    
+    html += `</div>`;
+    
+    if (storyHistory.length > 0) {
+        html += `<br><button onclick="goBack()" style="background:linear-gradient(45deg, #8E2DE2, #4A00E0);">← Вернуться к предыдущему выбору</button>`;
+    }
+    
+    gameDiv.innerHTML = html;
+}
+
+function makeChoice(choiceIndex) {
+    const currentStepData = storySteps[currentStep];
+    const choice = currentStepData.choices[choiceIndex];
+    
+    storyHistory.push({step: currentStep, choice: choiceIndex});
+    showEnding(choice.ending);
+}
+
+function showEnding(ending) {
+    const gameDiv = document.getElementById("game");
+    
+    let html = `<div class="ending-screen">`;
+    html += `<h2>${ending.title}</h2>`;
+    html += `<p>${ending.text}</p>`;
+    html += `<img src="${ending.img}" alt="Иллюстрация концовки">`;
+    html += `<br><br>`;
+    
+    if (currentStep < storySteps.length - 1) {
+        html += `<button onclick="nextStep()">Продолжить путь →</button>`;
+    } else {
+        html += `<h2 style="color:#FFD700;">🎉 Твоя легенда завершена! 🎉</h2>`;
+        html += `<p>Ты прошла все 7 этапов приключения и создала свою уникальную историю в Древней Греции.</p>`;
+    }
+    
+    html += `<button onclick="restartGame()" class="restart-btn">✨ Начать новую историю</button>`;
+    html += `<button onclick="viewHistory()" class="history-btn">📖 Посмотреть историю выбора</button>`;
+    html += `</div>`;
+    
+    gameDiv.innerHTML = html;
+}
+
+function nextStep() {
+    currentStep++;
+    renderStep();
+}
+
+function goBack() {
+    if (storyHistory.length > 0) {
+        storyHistory.pop();
+        
+        if (storyHistory.length > 0) {
+            const prev = storyHistory[storyHistory.length - 1];
+            currentStep = prev.step;
+        } else {
+            currentStep = 0;
+        }
+        
+        renderStep();
+    }
+}
+
+function viewHistory() {
+    const gameDiv = document.getElementById("game");
+    
+    let html = `<h2>📜 История приключений Айдай</h2>`;
+    html += `<div style="text-align:left; max-width:500px; margin:auto; background:rgba(255,255,255,0.1); padding:20px; border-radius:10px;">`;
+    
+    if (storyHistory.length === 0) {
+        html += `<p>История ещё не началась. Сделай свой первый выбор!</p>`;
+    } else {
+        storyHistory.forEach((record, index) => {
+            const step = storySteps[record.step];
+            const choice = step.choices[record.choice];
+            html += `<p><strong>Этап ${record.step + 1}:</strong> ${step.title}</p>`;
+            html += `<p style="margin-left:20px; color:#87CEEB;">→ ${choice.text}</p>`;
+            html += `<hr style="border-color:rgba(255,255,255,0.1)">`;
+        });
+    }
+    
+    html += `</div>`;
+    html += `<br><button onclick="showEnding(storySteps[currentStep].choices[storyHistory[storyHistory.length-1]?.choice || 0].ending)">← Вернуться к концовке</button>`;
+    html += `<button onclick="restartGame()" class="restart-btn">Начать заново</button>`;
+    
+    gameDiv.innerHTML = html;
+}
+
+function restartGame() {
+    currentStep = 0;
+    storyHistory = [];
+    renderStep();
+}
+
+// Начинаем игру
+renderStep();
+</script>
+
+</body>
+</html>
